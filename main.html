@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HSK Learning - Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" />
+  
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- Modern Header -->
+     
+    <header class="dashboard-header">
+      <div class="header-content">
+        
+        <div class="header-top">
+        
+         
+          <div class="branding">
+            
+            <i class="fas fa-language logo-icon"></i>
+            
+               <h1 class="dashboard-title">汉桥 Han Qiao Chinese Learning <br>  <p style="color: #ff4757;font-family: Montaga, serif;font-weight: 400;font-style: normal;">တရုတ်စာသင်ယူဖို့ ခြေလှမ်းတိုင်းအတွက် တံတားတစ်ခုလိုကူညီပေးမှာပါ</p></h1>
+       
+          </div>
+            
+          <button class="logout-button" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i> log Out
+          </button>
+        </div>
+        
+        <div class="header-bottom">
+          
+          <div class="progress-indicator">
+            <span class="progress-text"></span>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 65%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="course-status-nav">
+      <ul class="status-list">
+        <li class="status-item active">
+          <i class="fas fa-crown"></i>  Your Premium Courses
+        </li>
+      </ul>
+    </nav>
+
+    
+
+    <!-- Main Content -->
+    <section class="learning-section" id="learningSection">
+      <div class="section-header">
+        <h3 class="section-title">
+          <i class="fas fa-graduation-cap"></i> Your Learning Path
+        </h3>
+        <button class="view-all">View All</button>
+      </div>
+      <!-- Courses will be inserted here dynamically by JavaScript -->
+    </section>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href="https://www.chinesetest.cn/" target="_blank" class="footer-link">
+            <i class="fas fa-external-link-alt"></i> Official HSK
+          </a>
+          <a href="https://www.hskonline.com/" target="_blank" class="footer-link">
+            <i class="fas fa-book-open"></i> HSK Textbook
+          </a>
+          <a href="#" class="footer-link">
+            <i class="fas fa-question-circle"></i> Help Center
+          </a>
+        </div>
+        <div class="footer-meta">
+          <p class="footer-text">
+           <i class="fas fa-heart" style="color: #ff4757;"></i><i style="color: #4791ffea;font-family: Montaga, serif;font-weight: 400;font-style: normal;font-size: 20px;">ဟန့်ချောင် တရုတ်စာ သင်ကြားရေး နဲ့အတူ သင့် အနာဂတ်ကို ရေးထိုးလိုက်ပါ </i> <i class="fas fa-heart" style="color: #ff4757;"></i>
+          </p>
+          <p class="footer-copyright">
+            © 2025  汉桥 Han Qiao Chinese Learning. All rights reserved.
+            Reference for using video, hsk rescourse and voice. 
+          </p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- JavaScript remains unchanged -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Example: get user from localStorage or a mocked user
+      const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {
+        name: "Demo User",
+        hskLevel: "HSK3", // Change this to test different levels
+      };
+
+// Map of HSK levels to their details and sub-levels
+const hskCourses = {
+  HSK1: {
+    title: "HSK 1 (1-150)",
+    subLevels: ["HSK 1 (1-60)", "HSK 1 (61-120)", "HSK 1 (121-150)"],
+  },
+  HSK2: {
+    title: "HSK 2 (151-300)",
+    subLevels: ["HSK 2 (151-210)", "HSK 2 (211-270)", "HSK 2 (271-300)"],
+  },
+  HSK3: {
+    title: "HSK 3 (301-600)",
+    subLevels: ["HSK 3 (301-400)", "HSK 3 (401-500)", "HSK 3 (501-600)"],
+  },
+  HSK4: {
+    title: "HSK 4 (601-1200)",
+    subLevels: ["HSK 4 (601-800)", "HSK 4 (801-1000)", "HSK 4 (1001-1200)"],
+  },
+  HSK5: {
+    title: "HSK 5 (1201-2500)",
+    subLevels: ["HSK 5 (1201-1600)", "HSK 5 (1601-2000)", "HSK 5 (2001-2500)"],
+  },
+  HSK6: {
+    title: "HSK 6 (2501-5000+)",
+    subLevels: ["HSK 6 (2501-3500)", "HSK 6 (3501-4500)", "HSK 6 (4500+)"],
+  },
+};
+
+// Order of levels to respect hierarchy
+const hskOrder = ["HSK1", "HSK2", "HSK3", "HSK4", "HSK5", "HSK6"];
+
+const learningSection = document.getElementById("learningSection");
+
+// Function to render courses up to user's level
+function renderUserCourses(userLevel) {
+  learningSection.innerHTML = `<div class="section-header">
+    <h3 class="section-title"><i class="fas fa-graduation-cap"></i> Your Learning Path</h3>
+    <button class="view-all">View All</button>
+  </div>`;
+
+  if (!userLevel || !hskOrder.includes(userLevel)) {
+    learningSection.innerHTML +=
+      `<div class="empty-state">
+        <i class="fas fa-book-open"></i>
+        <p>No HSK level assigned to your account.</p>
+        <button class="primary-button">Contact Support</button>
+      </div>`;
+    return;
+  }
+
+  // Include all levels up to userLevel (including it)
+  const userLevelIndex = hskOrder.indexOf(userLevel);
+  const levelsToShow = hskOrder.slice(0, userLevelIndex + 1);
+
+  const coursesContainer = document.createElement("div");
+  coursesContainer.className = "courses-grid";
+
+  levelsToShow.forEach((level) => {
+    const course = hskCourses[level];
+    if (course) {
+      const article = document.createElement("article");
+      article.className = "course-card";
+
+      // For HSK1, add link to hsk1.html
+      const subLevelItems = course.subLevels
+        .map((sub) => {
+          if (level === "HSK1") {
+            return `<li class="course-item">
+                      <a href="hsk1.html" class="course-link">
+                        <i class="fas fa-play-circle"></i> ${sub}
+                      </a>
+                    </li>`;
+          } else {
+            return `<li class="course-item">
+                      <i class="fas fa-play-circle"></i> ${sub}
+                    </li>`;
+          }
+        })
+        .join("");
+
+      article.innerHTML = `
+        <div class="course-card-header">
+          <h4 class="course-title">${course.title}</h4>
+          <span class="course-badge">${level}</span>
+        </div>
+        <ul class="course-items-list">
+          ${subLevelItems}
+        </ul>
+        <button class="course-action-button">Continue Learning</button>
+      `;
+
+      coursesContainer.appendChild(article);
+    }
+  });
+
+  learningSection.appendChild(coursesContainer);
+}
+
+renderUserCourses(currentUser.hskLevel);
+
+
+      // Optionally, add logout handler
+      const logoutBtn = document.getElementById("logoutBtn");
+      logoutBtn?.addEventListener("click", () => {
+        if (confirm("Are you sure you want to logout?")) {
+          localStorage.removeItem("currentUser");
+          window.location.href = "index.html";
+        }
+      });
+    });
+
+    // Handle "Continue Learning" buttons navigation
+learningSection.addEventListener("click", (e) => {
+  if (e.target.classList.contains("course-action-button")) {
+    const courseCard = e.target.closest(".course-card");
+    const badge = courseCard.querySelector(".course-badge");
+    const level = badge ? badge.textContent.trim() : null;
+
+    if (level) {
+      const levelLinkMap = {
+        HSK1: "hsk1.html",
+        HSK2: "hsk2.html",
+        HSK3: "hsk3.html",
+        HSK4: "hsk4.html",
+        HSK5: "hsk5.html",
+        HSK6: "hsk6.html",
+      };
+
+      const link = levelLinkMap[level];
+
+      if (link) {
+        window.location.href = link;
+      } else {
+        alert("Link for this level is not available yet.");
+      }
+    }
+  }
+});
+
+  </script>
+</body>
+</html>

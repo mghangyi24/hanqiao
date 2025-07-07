@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HSK 1 Learning</title>
+  <link rel="icon" type="image/png" href="photo/logo-p.png" sizes="192x192">
+  <link rel="stylesheet" href="hsk1.css" />
+</head>
+
+<body>
+  <!-- Dark Mode Toggle -->
+  <button id="darkModeToggle" aria-label="Toggle dark mode" class="dark-mode-toggle">🌙</button>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <h1>HSK1 (汉桥 ဟန့်ချောင် တရုတ်စာ သင်ကြားရေး)</h1>
+      <a href="main.html" class="logout-btn">Logout</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" data-tab="lesson">Lesson</div>
+      <div class="tab" data-tab="vocabulary">Vocabulary</div>
+      <div class="tab" data-tab="grammar">Grammar</div>
+      <div class="tab" data-tab="story">Story</div>
+      <div class="tab" data-tab="video">Video</div>
+      <div class="tab" data-tab="writing">Character Writing</div>
+      <div class="tab" data-tab="exercise">Exercise</div>
+    </div>
+
+    <!-- Lesson Tab Content -->
+    <div id="lesson" class="tab-content active">
+      <h2>Lessons</h2>
+      <div class="lesson-list">
+        <div class="lesson-item" data-lesson="1">
+          <h3>Lesson 1: Greetings</h3>
+          <button class="view-btn">View Lesson</button>
+        </div>
+        <div class="lesson-item" data-lesson="2">
+          <h3>Lesson 2: Introductions</h3>
+          <button class="view-btn">View Lesson</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vocabulary Tab Content -->
+    <div id="vocabulary" class="tab-content">
+      <h2>Vocabulary</h2>
+      <p>Vocabulary content will be displayed here.</p>
+    </div>
+
+    <!-- Grammar Tab Content -->
+    <div id="grammar" class="tab-content">
+      <h2>Grammar</h2>
+      <p>Grammar content will be displayed here.</p>
+    </div>
+
+    <!-- Story Tab Content -->
+    <div id="story" class="tab-content">
+      <h2>Story</h2>
+      <p>Short stories and dialogues will be displayed here.</p>
+    </div>
+
+    <!-- Video Tab Content -->
+    <div id="video" class="tab-content">
+      <h2>Video</h2>
+      <p>Video lessons will be displayed here.</p>
+    </div>
+
+    <!-- Writing Tab Content -->
+    <div id="writing" class="tab-content">
+      <h2>စုတ်ချက်ရေးသားနည်း</h2>
+      <p>စကားလုံးရွေးချယ်ပြီး စုတ်ချက် သင်ယူပါ</p>
+
+      <div class="character-grid">
+        <button class="character-btn" data-char="你" data-gif="strokes/ni.gif">你</button>
+        <button class="character-btn" data-char="好" data-gif="strokes/hao.gif">好</button>
+        <button class="character-btn" data-char="是" data-gif="strokes/shi.gif">是</button>
+        <button class="character-btn" data-char="我" data-gif="strokes/wo.gif">我</button>
+        <button class="character-btn" data-char="学" data-gif="strokes/xue.gif">学</button>
+        <button class="character-btn" data-char="习" data-gif="strokes/xi.gif">习</button>
+        <button class="character-btn" data-char="汉" data-gif="strokes/han.gif">汉</button>
+        <button class="character-btn" data-char="语" data-gif="strokes/yu.gif">语</button>
+      </div>
+
+      <div id="gif-display">
+        <h3>Showing: <span id="current-character">None</span></h3>
+        <img id="stroke-gif" alt="Character stroke animation" style="max-width: 200px; display: block; margin: 0 auto;">
+        <p id="gif-placeholder">Please select a character above.</p>
+      </div>
+    </div>
+
+    <!-- Exercise Tab Content -->
+<div id="exercise" class="tab-content">
+  <h2>Exercises</h2>
+  <div id="exercise-buttons">
+    <button id="lesson-1-exercise-btn" class="btn primary">Lesson 1 Exercise</button>
+    <button id="lesson-2-exercise-btn" class="btn primary">Lesson 2 Exercise</button>
+    <!-- Add additional lesson buttons here -->
+  </div>
+</div>
+
+<!-- Exercise Modal -->
+<div id="exercise-modal" class="modal hidden">
+  <div class="modal-content">
+    <span id="close-exercise-modal" class="close-button">&times;</span>
+    <div id="exercise-content"></div>
+  </div>
+</div>
+
+
+<script>
+  // Dark Mode Toggle
+  document.getElementById('darkModeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+  });
+
+  // Tab functionality
+  const tabs = document.querySelectorAll('.tab');
+  const tabContents = document.querySelectorAll('.tab-content');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      const target = tab.dataset.tab;
+      tabContents.forEach(content => {
+        content.classList.toggle('active', content.id === target);
+      });
+    });
+  });
+
+ // ------------------------------
+// Character Writing Logic (unchanged)
+// ------------------------------
+const characterButtons = document.querySelectorAll('.character-btn');
+const currentCharacterDisplay = document.getElementById('current-character');
+const strokeGif = document.getElementById('stroke-gif');
+const gifPlaceholder = document.getElementById('gif-placeholder');
+
+characterButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const char = button.getAttribute('data-char');
+    const gifSrc = button.getAttribute('data-gif');
+    currentCharacterDisplay.textContent = char;
+    strokeGif.src = gifSrc;
+    strokeGif.style.display = 'block';
+    gifPlaceholder.style.display = 'none';
+  });
+});
+
+// ------------------------------
+// Exercise Data
+// ------------------------------
+const exercises = {
+  1: {
+    title: "Lesson 1: Greetings",
+    sections: [
+      {
+        type: "fillblank",
+        title: "Fill in the blank.",
+        content: [
+          { sentence: "Nǐ ___ hǎo?", answer: "men" },
+          { sentence: "Wǒ ___ zhōngguó rén.", answer: "shi" }
+        ]
+      },
+      {
+        type: "qa",
+        title: "Q&A",
+        content: [
+          { question: "How do you say 'Thank you' in Chinese?", answer: "xiexie" },
+          { question: "How do you say 'Goodbye' in Chinese?", answer: "zaijian" }
+        ]
+      },
+      {
+        type: "multichoice",
+        title: "Multiple choice questions.",
+        questions: [
+          {
+            question: "How do you say 'Hello' in Chinese?",
+            options: ["Nǐ hǎo", "Xièxiè", "Zàijiàn"],
+            correct: 0
+          }
+        ]
+      }
+    ]
+  },
+};
+
+// ------------------------------
+// Exercise Templates
+// ------------------------------
+const exerciseTemplates = {
+  fillblank: (content) => `
+    <div class="fillblank-container">
+      ${content.map(item => `
+        <div class="fillblank-item">
+          <p>${item.sentence.replace("___", `<input type="text" data-answer="${item.answer}" placeholder="...">`)}</p>
+          <div class="feedback"></div>
+        </div>
+      `).join('')}
+      <button class="btn primary check-fillblank-btn">Check Answers</button>
+    </div>
+  `,
+  qa: (content) => `
+    <div class="qa-container">
+      ${content.map((item, idx) => `
+        <div class="qa-item">
+          <p>${idx + 1}. ${item.question}</p>
+          <input type="text" data-answer="${item.answer}" placeholder="Your answer">
+          <div class="feedback"></div>
+        </div>
+      `).join('')}
+      <button class="btn primary check-qa-btn">Check Answers</button>
+    </div>
+  `,
+  multichoice: (questions) => `
+    <div class="mcq-container">
+      ${questions.map((q, idx) => `
+        <div class="mcq-item">
+          <p>${idx + 1}. ${q.question}</p>
+          <div class="options">
+            ${q.options.map((option, optIdx) => `
+              <label>
+                <input type="radio" name="q${idx}" value="${optIdx}" ${optIdx === q.correct ? 'data-correct="true"' : ''}>
+                ${option}
+              </label>
+            `).join('')}
+          </div>
+          <div class="feedback"></div>
+        </div>
+      `).join('')}
+      <button class="btn primary check-mcq-btn">Check Answers</button>
+    </div>
+  `
+};
+
+// ------------------------------
+// Render Exercises into Modal
+// ------------------------------
+function renderExercises(lessonId) {
+  const lesson = exercises[lessonId];
+  const exerciseContent = document.getElementById('exercise-content');
+  const modal = document.getElementById('exercise-modal');
+
+  if (!lesson) {
+    exerciseContent.innerHTML = "<p>Lesson not found.</p>";
+    return;
+  }
+
+  let html = `<h2>${lesson.title}</h2>`;
+
+  lesson.sections.forEach(section => {
+    html += `
+      <section class="exercise-section">
+        <h3>${section.title}</h3>
+        ${exerciseTemplates[section.type](section.content || section.questions)}
+      </section>
+    `;
+  });
+
+  // Add Cancel button at the end
+  html += `<button class="btn secondary cancel-exercise-btn">Cancel</button>`;
+
+  exerciseContent.innerHTML = html;
+
+  setupExerciseInteractions();
+
+  modal.classList.add('active');
+}
+
+// ------------------------------
+// Setup Exercise Interactions
+// ------------------------------
+function setupExerciseInteractions() {
+  // Multiple Choice
+  document.querySelectorAll('.check-mcq-btn').forEach(button => {
+    button.onclick = () => {
+      const container = button.closest('.mcq-container');
+      container.querySelectorAll('.mcq-item').forEach(item => {
+        const selected = item.querySelector('input:checked');
+        const feedback = item.querySelector('.feedback');
+
+        if (!selected) {
+          feedback.textContent = "Please select an answer";
+          feedback.className = "feedback warning";
+          return;
+        }
+
+        const isCorrect = selected.dataset.correct === "true";
+        feedback.textContent = isCorrect ? "✓ Correct" : "✗ Incorrect";
+        feedback.className = `feedback ${isCorrect ? "correct" : "incorrect"}`;
+      });
+    };
+  });
+
+  // Fill in the Blank
+  document.querySelectorAll('.check-fillblank-btn').forEach(button => {
+    button.onclick = () => {
+      const container = button.closest('.fillblank-container');
+      container.querySelectorAll('.fillblank-item').forEach(item => {
+        const input = item.querySelector('input');
+        const feedback = item.querySelector('.feedback');
+
+        const userAnswer = input.value.trim().toLowerCase();
+        const correctAnswer = input.dataset.answer.toLowerCase();
+        const isCorrect = userAnswer === correctAnswer;
+
+        feedback.textContent = isCorrect ? "✓ Correct" : `✗ Incorrect. Correct: ${correctAnswer}`;
+        feedback.className = `feedback ${isCorrect ? "correct" : "incorrect"}`;
+      });
+    };
+  });
+
+  // Q&A
+  document.querySelectorAll('.check-qa-btn').forEach(button => {
+    button.onclick = () => {
+      const container = button.closest('.qa-container');
+      container.querySelectorAll('.qa-item').forEach(item => {
+        const input = item.querySelector('input');
+        const feedback = item.querySelector('.feedback');
+
+        const userAnswer = input.value.trim().toLowerCase();
+        const correctAnswer = input.dataset.answer.toLowerCase();
+        const isCorrect = userAnswer === correctAnswer;
+
+        feedback.textContent = isCorrect ? "✓ Correct" : `✗ Incorrect. Correct: ${correctAnswer}`;
+        feedback.className = `feedback ${isCorrect ? "correct" : "incorrect"}`;
+      });
+    };
+  });
+
+  // Cancel Button
+  document.querySelectorAll('.cancel-exercise-btn').forEach(button => {
+    button.onclick = () => {
+      const modal = document.getElementById('exercise-modal');
+      modal.classList.remove('active');
+    };
+  });
+}
+
+// ------------------------------
+// Modal Close Logic
+// ------------------------------
+const closeModalBtn = document.getElementById('close-exercise-modal');
+const exerciseModal = document.getElementById('exercise-modal');
+
+closeModalBtn.addEventListener('click', () => {
+  exerciseModal.classList.remove('active');
+});
+
+// ------------------------------
+// Lesson Button Listener
+// ------------------------------
+const lesson1ExerciseBtn = document.getElementById('lesson-1-exercise-btn');
+lesson1ExerciseBtn.addEventListener('click', () => {
+  renderExercises(1);
+});
+
+</script>
+
+</body>
+</html>
+
+
+  <!-- Modal for Lesson Popups -->
+  <div id="lesson-modal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <div id="lesson-modal-body">
+        <p>Loading lesson...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <p> © 2025  汉桥 Han Qiao Chinese Learning. All rights reserved.
+            Reference for using video, hsk rescourse and voice. </p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/hanzi-writer@2.1.2/dist/hanzi-writer.min.js"></script>
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Dark Mode Toggle
+  const toggleBtn = document.getElementById('darkModeToggle');
+  const currentTheme = localStorage.getItem('theme');
+  if (currentTheme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  toggleBtn.addEventListener('click', () => {
+    if (document.documentElement.getAttribute('data-theme') === 'dark') {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('theme', 'light');
+      toggleBtn.textContent = '🌙';
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+      toggleBtn.textContent = '☀️';
+    }
+  });
+
+  // Tabs
+  const tabs = document.querySelectorAll('.tab');
+  const tabContents = document.querySelectorAll('.tab-content');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const target = tab.getAttribute('data-tab');
+      tabContents.forEach(tc => {
+        tc.classList.toggle('active', tc.id === target);
+      });
+    });
+  });
+
+ 
+
+});
+</script>
+
+  <script src="hsk1.js"></script>
+</body>
+</html>
