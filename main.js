@@ -1,216 +1,122 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // 👇 Set page-specific filter:
-  const PAGE_STATUS = 'In Progress'; // Use 'Completed' for completed page
+document.addEventListener('DOMContentLoaded', function() {
+    const allUsers = JSON.parse(localStorage.getItem('hskUsers')) || [];
+    const currentUserStored = JSON.parse(localStorage.getItem('currentUser'));
 
-  // --- SECURITY CHECK: Validate login before loading content ---
-  const userJSON = localStorage.getItem('currentUser');
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-
-  // Important: This client-side check can be bypassed by users.
-  // For real security, validate login token/session on backend before serving this page.
-
-  if (!userJSON || !isLoggedIn) {
-    alert('Please log in first.');
-    window.location.href = 'index.html';  // Redirect to login page
-    return; // Stop further execution if not logged in
-  }
-
-  const user = JSON.parse(userJSON);
-
-  // ---- Your existing code ----
-  const courseCards = document.querySelectorAll('.course-card');
-  const searchInput = document.querySelector('.search-input');
-  const resumeButton = document.querySelector('.resume-button');
-  const sectionTitle = document.querySelector('.section-title');
-  const logoutButton = document.querySelector('.logout-button');
-  const header = document.querySelector('.dashboard-header');
-
-  const normalize = str => str.replace(/\s+/g, '').toLowerCase();
-
-  function extractHSKLevel(title) {
-    const match = title.match(/hsk\s*(\d+)/i);
-    return match ? `hsk${match[1]}`.toLowerCase() : '';
-  }
-
-  function filterAccessibleCourses() {
-    const paidLevels = (user.paidLevels || []).map(level => normalize(level));
-
-    courseCards.forEach(card => {
-      const titleText = card.querySelector('.course-title')?.textContent || '';
-      const titleNormalized = normalize(titleText);
-      const courseLevel = extractHSKLevel(titleText);
-
-      const hasAccess =
-        paidLevels.includes('all') ||
-        paidLevels.includes(courseLevel) ||
-        titleNormalized.includes('free') ||
-        titleNormalized.includes('hsklearning-english');
-
-      if (hasAccess) {
-        card.dataset.hasAccess = 'true';
-        if (!card.dataset.status) {
-          card.dataset.status = 'To do';
-        }
-      } else {
-        card.dataset.hasAccess = 'false';
-      }
-    });
-  }
-
-  function filterByPageStatus() {
-    if (sectionTitle) {
-      sectionTitle.textContent = `HSK Learning - ${PAGE_STATUS}`;
+    if (!currentUserStored) {
+        window.location.href = 'index.html';
+        return;
     }
 
-    courseCards.forEach(card => {
-      const hasAccess = card.dataset.hasAccess === 'true';
-      const status = card.dataset.status || 'To do';
+    const currentUser = allUsers.find(u => u.id === currentUserStored.id);
+    if (!currentUser) {
+        window.location.href = 'index.html';
+        return;
+    }
 
-      if (hasAccess && (PAGE_STATUS === 'All' || status === PAGE_STATUS)) {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+    document.getElementById('welcome-message').textContent = `Welcome, ${currentUser.username}!`;
+    document.getElementById('joined-date').textContent = `Member since ${currentUser.joinedDate || 'unknown date'}`;
+
+    const hskLevelsData = [
+        { id: 1, name: 'HSK 1', color: 'hsk1', description: '150 words, basic phrases' },
+        { id: 2, name: 'HSK 2', color: 'hsk2', description: '300 words, simple conversations' },
+        { id: 3, name: 'HSK 3', color: 'hsk3', description: '600 words, daily communication' },
+        { id: 4, name: 'HSK 4', color: 'hsk4', description: '1200 words, discussing various topics' },
+        { id: 5, name: 'HSK 5', color: 'hsk5', description: '2500 words, reading newspapers' },
+        { id: 6, name: 'HSK 6', color: 'hsk6', description: '5000+ words, academic/professional' }
+    ];
+
+    const userLevels = hskLevelsData
+        .filter(level => currentUser.hskLevels.includes(level.id))
+        .map(level => ({
+            ...level,
+            progress: level.id === currentUser.currentLevel ? 75 : 100
+        }));
+
+    const levelsContainer = document.getElementById('allLevels');
+    levelsContainer.innerHTML = '';
+
+    userLevels.forEach(level => {
+        const levelCard = document.createElement('div');
+        levelCard.className = `level-card ${level.color} ${level.id === currentUser.currentLevel ? 'active' : ''}`;
+        levelCard.innerHTML = `
+            <h3>${level.name}</h3>
+            <p>${level.description}</p>
+            <div class="progress">
+                <div class="progress-bar" style="width: ${level.progress}%"></div>
+            </div>
+            <small>${level.progress}% complete</small>
+        `;
+        levelCard.addEventListener('click', () => openLevelModal(level));
+        levelsContainer.appendChild(levelCard);
     });
-  }
 
-  function setupSearch() {
-    if (!searchInput) return;
-    let timer;
-    searchInput.addEventListener('input', () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        const term = normalize(searchInput.value);
+    const hskDescriptions = {
+        1: "HSK 1: Basic understanding with 150 words.",
+        2: "HSK 2: Simple communication with 300 words.",
+        3: "HSK 3: Daily communication with 600 words.",
+        4: "HSK 4: Discussing various topics with 1200 words.",
+        5: "HSK 5: Reading newspapers with 2500 words.",
+        6: "HSK 6: Fluent comprehension with 5000+ words."
+    };
 
-        courseCards.forEach(card => {
-          if (card.dataset.hasAccess !== 'true') {
-            card.style.display = 'none';
-            return;
-          }
+    const currentLevelContainer = document.getElementById('currentLevel');
+    currentLevelContainer.innerHTML = `
+        <h3>Current Focus: HSK ${currentUser.currentLevel}</h3>
+        <div class="level-badge">HSK ${currentUser.currentLevel}</div>
+        <p>${hskDescriptions[currentUser.currentLevel]}</p>
+        <small>${userLevels.find(l => l.id === currentUser.currentLevel)?.progress || 0}% complete</small>
+    `;
 
-          const status = card.dataset.status || 'To do';
-          if (PAGE_STATUS !== 'All' && status !== PAGE_STATUS) {
-            card.style.display = 'none';
-            return;
-          }
+    document.getElementById('logout').addEventListener('click', () => {
+        localStorage.removeItem('currentUser');
+        window.location.href = 'index.html';
+    });
 
-          const title = normalize(card.querySelector('.course-title')?.textContent || '');
-          const lessons = Array.from(card.querySelectorAll('.course-item')).map(item =>
-            normalize(item.textContent)
-          );
+    function openLevelModal(level) {
+        const modal = document.createElement('div');
+        modal.className = 'level-modal active';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>${level.name}</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>${level.description}</p>
+                    <p>This level covers ${
+                        level.id === 1 ? '150' :
+                        level.id === 2 ? '300' :
+                        level.id === 3 ? '600' :
+                        level.id === 4 ? '1200' :
+                        level.id === 5 ? '2500' : '5000+'
+                    } words and essential grammar.</p>
+                    <div class="progress-container">
+                        <p>Your progress: ${level.progress}%</p>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: ${level.progress}%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn secondary close-modal">Close</button>
+                    <button class="modal-btn primary">${level.id === currentUser.currentLevel ? 'Continue Learning' : 'Review Level'}</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
 
-          const matches = title.includes(term) || lessons.some(text => text.includes(term));
-          card.style.display = matches ? '' : 'none';
+        modal.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', () => {
+                modal.classList.remove('active');
+                setTimeout(() => modal.remove(), 300);
+            });
         });
-      }, 300);
-    });
-  }
 
-  function setupInteractions() {
-    courseCards.forEach(card => {
-      card.addEventListener('click', e => {
-        if (!e.target.classList.contains('course-item')) {
-          console.log(`Selected course: ${card.querySelector('.course-title')?.textContent || ''}`);
-        }
-      });
-
-      card.querySelectorAll('.course-item').forEach(item => {
-        item.addEventListener('mouseenter', () => {
-          item.style.transform = 'translateY(-2px)';
-          item.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+        modal.querySelector('.modal-btn.primary').addEventListener('click', () => {
+            // Navigate to corresponding lesson page
+            window.location.href = `hsk${level.id}.html`;
         });
-        item.addEventListener('mouseleave', () => {
-          item.style.transform = '';
-          item.style.boxShadow = '';
-        });
-        item.addEventListener('click', e => {
-          e.stopPropagation();
-          console.log(`Selected lesson: ${item.textContent}`);
-        });
-      });
-    });
-  }
-
-  function showToast(message, color = '#333') {
-    const toast = document.createElement('div');
-    toast.textContent = message;
-    Object.assign(toast.style, {
-      position: 'fixed',
-      bottom: '20px',
-      left: '50%',
-      transform: 'translateX(-50%)',
-      backgroundColor: color,
-      color: '#fff',
-      padding: '10px 20px',
-      borderRadius: '5px',
-      zIndex: '1000',
-      opacity: '1',
-      transition: 'opacity 0.5s ease',
-    });
-    document.body.appendChild(toast);
-    setTimeout(() => {
-      toast.style.opacity = '0';
-      setTimeout(() => toast.remove(), 500);
-    }, 2500);
-  }
-
-  function updateHeader() {
-    if (!header) return;
-    const hour = new Date().getHours();
-    header.style.background =
-      hour >= 6 && hour < 18
-        ? 'linear-gradient(135deg, #f5f7fa, #e4e8eb)'
-        : 'linear-gradient(135deg, #2c3e50, #1a2530)';
-  }
-
-  function setupLogoutButton() {
-    if (!logoutButton) return;
-    logoutButton.addEventListener('click', () => {
-      if (confirm('Are you sure you want to logout?')) {
-        logoutButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging out...';
-        logoutButton.disabled = true;
-        setTimeout(() => {
-          localStorage.removeItem('isLoggedIn');
-          localStorage.removeItem('currentUser');
-          window.location.href = 'index.html';
-        }, 1000);
-      }
-    });
-  }
-
-  function setupResume() {
-    if (!resumeButton) return;
-    resumeButton.addEventListener('click', function () {
-      this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Resuming...';
-      this.disabled = true;
-      setTimeout(() => {
-        this.innerHTML = 'Resume course';
-        this.disabled = false;
-        showToast('Course resumed successfully!', '#43a047');
-      }, 1500);
-    });
-  }
-
-  function setupAnimations() {
-    if (typeof gsap === 'undefined') return;
-    gsap.from('.dashboard-header', { duration: 0.8, y: -50, opacity: 0, ease: 'power2.out' });
-    gsap.from('.course-card', {
-      duration: 0.5,
-      y: 20,
-      opacity: 0,
-      stagger: 0.1,
-      delay: 0.3,
-      ease: 'power1.out',
-    });
-  }
-
-  // --- Initialization ---
-  filterAccessibleCourses();
-  filterByPageStatus();
-  setupSearch();
-  setupInteractions();
-  setupResume();
-  setupLogoutButton();
-  updateHeader();
-  setupAnimations();
+    }
 });

@@ -1,73 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HSK Learning - Admin Dashboard</title>
-  <link rel="stylesheet" href="admin.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-  <div class="container">
-    <header class="admin-header">
-      <h1>HSK Learning Platform <span class="highlight">Admin</span></h1>
-      <div class="user-info">
-        <span id="admin-name" aria-label="Admin Name"></span>
-        <button id="admin-logout-btn" class="btn">Logout</button>
-      </div>
+    <header>
+        <h1>Admin Dashboard</h1>
+        <button id="logout">Logout</button>
     </header>
-
-    <main class="admin-dashboard">
-      <h2>Admin Dashboard</h2>
-
-      <section class="admin-section">
-        <h3>User Management</h3>
-        <button id="add-user-btn" class="admin-btn">Add New User</button>
-        <div id="user-list" class="user-list">
-          <!-- User cards will populate here dynamically -->
-        </div>
-      </section>
-
-      <section class="admin-section">
-        <h3>Content Management</h3>
-        <div class="content-actions">
-          <button id="add-word-btn" class="admin-btn">Add New Word</button>
-          <button id="add-lesson-btn" class="admin-btn">Add New Lesson</button>
-          <button id="view-content-btn" class="admin-btn">View All Content</button>
-        </div>
-      </section>
-
-      <section class="admin-section">
-        <h3>Statistics</h3>
-        <div class="stats-container">
-          <div class="stat-card">
-            <h4>Total Users</h4>
-            <p id="total-users">0</p>
-          </div>
-          <div class="stat-card">
-            <h4>Active Today</h4>
-            <p id="active-today">0</p>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <!-- Manage User Modal -->
-  <div id="manage-user-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="manage-user-title">
-    <div class="modal-overlay"></div>
-    <div class="modal-panel">
-      <button id="close-manage-modal" class="close-btn" aria-label="Close Modal">&times;</button>
-      <h2 id="manage-user-title" class="modal-title">Manage User</h2>
-      <div id="manage-user-content" class="modal-content">
-        <!-- Dynamic user management form will populate here -->
-      </div>
-      <div class="modal-actions">
-        <button id="save-user-btn" class="modal-btn save-btn">Save Changes</button>
-        <button id="delete-user-btn" class="modal-btn delete-btn">Delete User</button>
-      </div>
+    <div class="container">
+        <h2>User Management</h2>
+        <button id="addUser">Add New User</button>
+        <table id="userTable">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Joined Date</th>
+                    <th>HSK Level</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- User data will be inserted here by admin.js -->
+            </tbody>
+        </table>
     </div>
-  </div>
 
-  <script src="admin.js"></script>
+
+    <div class="level-management">
+    <h3>HSK Level Management</h3>
+    <div class="controls">
+        <select id="levelSelect">
+            <option value="1">HSK 1</option>
+            <option value="2">HSK 2</option>
+            <option value="3">HSK 3</option>
+            <option value="4">HSK 4</option>
+            <option value="5">HSK 5</option>
+            <option value="6">HSK 6</option>
+        </select>
+        <button id="addLevel">Add Level</button>
+        <button id="setCurrent">Set as Current</button>
+    </div>
+    <div id="userLevels">
+        <p>Select a user to manage their HSK levels</p>
+    </div>
+</div>
+    <script src="admin.js"></script>
 </body>
 </html>

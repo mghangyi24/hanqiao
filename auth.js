@@ -1,47 +1,67 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('login-form');
-    if (!loginForm) return;
+// In login.js (or your login script)
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const errorMessage = document.getElementById('error-message');
 
-    const defaultHSKLevels = ['HSK1', 'HSK2', 'HSK3', 'HSK4', 'HSK5', 'HSK6'];
-    const adminEmail = 'admin@hsk.com';
-
-    // Initialize users if not exists
-    let storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-    if (!storedUsers.some(user => user.email === adminEmail)) {
-        storedUsers.push({
-            name: 'Admin',
-            email: adminEmail,
-            password: 'admin123',
-            hskLevels: defaultHSKLevels,
-            paidLevels: defaultHSKLevels,
-            role: 'admin'
-        });
-        localStorage.setItem('users', JSON.stringify(storedUsers));
+    // Load users from localStorage or initialize with sample data if empty
+    let allUsers = JSON.parse(localStorage.getItem('hskUsers'));
+    
+    // If no users exist, initialize with sample data
+    if (!allUsers || allUsers.length === 0) {
+        allUsers = [
+            { 
+                id: 1, 
+                username: 'user1', 
+                password: '123123', 
+                joinedDate: '2023-01-15', 
+                hskLevels: [1],  // Only HSK 1 and 2 for user1
+                currentLevel: 1
+            },
+            { 
+                id: 2, 
+                username: 'user2', 
+                password: 'pass456', 
+                joinedDate: '2023-02-20', 
+                hskLevels: [2, 3],  // Only HSK 2 for user2
+                currentLevel: 3
+            },
+            { 
+                id: 3, 
+                username: 'admin', 
+                password: 'admin123', 
+                joinedDate: '2023-01-01', 
+                hskLevels: [1, 2, 3, 4, 5, 6],  // All levels for admin
+                currentLevel: 6,
+                isAdmin: true
+            }
+        ];
+        localStorage.setItem('hskUsers', JSON.stringify(allUsers));
     }
 
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+    const user = allUsers.find(u => u.username === username && u.password === password);
 
-        const email = document.getElementById('login-email').value.trim().toLowerCase();
-        const password = document.getElementById('login-password').value;
+    if (user) {
+        // Store user session data
+        localStorage.setItem('currentUser', JSON.stringify({
+            id: user.id,
+            username: user.username,
+            joinedDate: user.joinedDate,
+            currentLevel: user.currentLevel,
+            hskLevels: user.hskLevels,  // Make sure to include hskLevels
+            isAdmin: user.isAdmin || false
+        }));
 
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const user = users.find(u => u.email.toLowerCase() === email && u.password === password);
-
-        if (!user) {
-            alert('Invalid email or password.');
-            return;
+        // Redirect based on admin status
+        window.location.href = user.isAdmin ? 'admin.html' : 'main.html';
+    } else {
+        if (errorMessage) {
+            errorMessage.textContent = 'Invalid username or password';
+            errorMessage.style.display = 'block';
+        } else {
+            alert('Invalid username or password');
         }
-
-        // Ensure user has required properties
-        user.hskLevels = Array.isArray(user.hskLevels) ? user.hskLevels : [];
-        user.paidLevels = Array.isArray(user.paidLevels) ? user.paidLevels : [];
-
-        // Store user session
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        localStorage.setItem('isLoggedIn', 'true');
-
-        // Redirect based on role
-        window.location.href = user.role === 'admin' ? 'admin.html' : 'main.html';
-    });
+    }
 });
