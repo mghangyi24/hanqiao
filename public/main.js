@@ -41,11 +41,72 @@ document.addEventListener('DOMContentLoaded', () => {
                 const hskLevels = user.hsk_level.split(',').map(l => l.trim()).filter(l => l);
 
                 profileContainer.innerHTML = `
-                    <div class="welcome-section">
-                        <h2>Welcome back, ${user.username}!</h2>
-                        <p>Member since ${user.joined_date}</p>
-                    </div>
-                    <h3>Your HSK Progress</h3>
+                    <div class="welcome-section" style="
+    background: rgba(255, 255, 255, 0.85);
+    padding: 1.75rem;
+    margin-bottom: 2rem;
+    border-radius: 10px;
+    backdrop-filter: blur(0.5px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #4a90e2;
+    position: relative;
+    overflow: hidden;
+">
+    <!-- Frosted glass overlay effect -->
+    <div style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.4);
+        z-index: -1;
+    "></div>
+    
+    <h2 style="
+        color: #2c3e50;
+        font-size: 1.8rem;
+        margin-bottom: 0.6rem;
+        font-weight: 650;
+        padding-bottom: 0.4rem;
+        border-bottom: 2px solid rgba(74, 144, 226, 0.3);
+    ">
+        Welcome back, ${user.username}!
+    </h2>
+    
+    <p style="
+        color: #5a6a7a;
+        font-size: 1.05rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.8rem;
+        background: rgba(74, 144, 226, 0.12);
+        border-radius: 5px;
+        width: fit-content;
+        backdrop-filter: blur(2px);
+    ">
+        <span style="color: #4a90e2; font-size: 1.1rem;">📅</span>
+        Member since ${user.joined_date}
+    </p>
+</div>
+                    <h3 style="
+    display: inline-block;
+    background-color: #1F2937; /* dark gray */
+    color: #FCD34D; /* warm gold for contrast */
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    text-align: center;
+">
+    Your HSK Progress
+</h3>
+
                     <div class="hsk-levels-grid">
                         ${hskLevels.map(level => `
                             <div class="hsk-level-card" data-level="${level}">
@@ -54,12 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="hsk-level-title">HSK Level ${level}</div>
                                 </div>
                                 <p class="hsk-level-description">${hskDescriptions[level].description}</p>
-                                <div class="progress-container">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: ${hskDescriptions[level].progress}%"></div>
-                                    </div>
-                                    <div class="progress-label">${hskDescriptions[level].progress}% complete</div>
-                                </div>
+                                
                             </div>
                         `).join('')}
                     </div>

@@ -30,6 +30,7 @@ body {
   padding: 20px;
   color: var(--dark);
   line-height: 1.6;
+  background-image: url(photo/ch-background.jpg);
 }
 
 /* ================ */
@@ -39,7 +40,7 @@ body {
   background: white;
   width: 100%;
   max-width: 400px;
-  padding: 2.5rem;
+  padding: 2.9rem;
   border-radius: 16px;
   box-shadow: var(--card-shadow);
   animation: fadeIn 0.6s ease-out;

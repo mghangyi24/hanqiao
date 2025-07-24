@@ -25,24 +25,38 @@
 }
 
 body {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-  color: var(--dark);
+  color: #222; /* Darker text for better contrast */
   line-height: 1.6;
   min-height: 100vh;
   padding: 2rem;
-  background-attachment: fixed;
+  margin: 0;
+  
+  /* Pure background photo with maximum visibility */
+  background: url('photo/main-back.jpg') no-repeat center center fixed;
+  background-size: cover;
 }
 
-#container {
+/* Transparent content container */
+.content-wrapper {
+  background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
+  backdrop-filter: blur(2px); /* Subtle frosted glass effect */
+  border-radius: 12px;
+  padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-  background: var(--card-bg);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
-  border: 1px solid var(--glass-effect);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Dark mode adaptation */
+@media (prefers-color-scheme: dark) {
+  body {
+    color: #eee; /* Light text for dark backgrounds */
+  }
+  .content-wrapper {
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
+  }
 }
 
 /* Header Styles */

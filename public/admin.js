@@ -179,3 +179,24 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => { messageEl.textContent = ''; }, 4000);
     }
 });
+
+// Add this to your admin.js
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+    try {
+        const response = await fetch('/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (response.ok) {
+            window.location.href = '/login.html';
+        } else {
+            alert('Logout failed. Please try again.');
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+        alert('An error occurred during logout.');
+    }
+});
