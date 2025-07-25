@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
-$db   = 'hsk_master';
+$db   = 'db_a9a6b3_hsk';
 $user = 'appuser';
-$pass = 'hankot1550!@#';
+$pass = 'SP5iro3UGqwYCQn';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
