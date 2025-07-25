@@ -1,5 +1,5 @@
 <?php
-$host = 'localhost';
+$host = 'MYSQL8010.site4now.net';
 $db   = 'db_a9a6b3_hsk';
 $user = 'appuser';
 $pass = 'SP5iro3UGqwYCQn';
