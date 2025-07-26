@@ -28,3 +28,4 @@ Stack trace:
 #0 D:\vs code\hanqiao\add_user.php(34): PDOStatement->execute(Array)
 #1 {main}
   thrown in D:\vs code\hanqiao\add_user.php on line 34
+[26-Jul-2025 04:10:48 America/New_York] PHP Warning:  session_destroy(): Trying to destroy uninitialized session in D:\vs code\hanqiao\logout.php on line 3
