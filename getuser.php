@@ -5,10 +5,10 @@ error_reporting(E_ALL);
 
 try {
     // Database configuration
-    $host = 'localhost';
-    $db   = 'hsk_master';
-    $user = 'appuser';
-    $pass = 'hankot1550!@#';
+    $host = 'MYSQL8010.site4now.net';
+    $db   = 'db_a9a6b3_hsk';
+    $user = 'a9a6b3_hsk';
+    $pass = 'SP5iro3UGqwYCQn';
     $charset = 'utf8mb4';
 
     $dsn = "mysql:host=$host;dbname=$db;charset=$charset";

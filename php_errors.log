@@ -1,0 +1,14 @@
+[25-Jul-2025 13:31:35 America/New_York] PHP Warning:  session_start(): open(D:/vs code/hanqiao/sessions\sess_d7aa73b388ffd026535d428b9d655f9d, O_RDWR) failed: No such file or directory (2) in D:\vs code\hanqiao\login.php on line 3
+[25-Jul-2025 13:31:35 America/New_York] PHP Warning:  session_start(): Failed to read session data: files (path: D:/vs code/hanqiao/sessions) in D:\vs code\hanqiao\login.php on line 3
+[25-Jul-2025 13:31:36 America/New_York] PHP Warning:  session_start(): open(D:/vs code/hanqiao/sessions\sess_584b095870a08d16e830c7236cf45c8f, O_RDWR) failed: No such file or directory (2) in D:\vs code\hanqiao\login.php on line 3
+[25-Jul-2025 13:31:36 America/New_York] PHP Warning:  session_start(): Failed to read session data: files (path: D:/vs code/hanqiao/sessions) in D:\vs code\hanqiao\login.php on line 3
+[25-Jul-2025 22:04:05 America/New_York] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'a9a6b3'@'69.160.9.170' (using password: YES) in D:\vs code\hanqiao\test_db.php:11
+Stack trace:
+#0 D:\vs code\hanqiao\test_db.php(11): mysqli->__construct('MYSQL8010.site4...', 'a9a6b3', Object(SensitiveParameterValue), 'db_a9a6b3_hsk')
+#1 {main}
+  thrown in D:\vs code\hanqiao\test_db.php on line 11
+[25-Jul-2025 22:05:29 America/New_York] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'a9a6b3'@'69.160.9.170' (using password: YES) in D:\vs code\hanqiao\test_db.php:11
+Stack trace:
+#0 D:\vs code\hanqiao\test_db.php(11): mysqli->__construct('MYSQL8010.site4...', 'a9a6b3', Object(SensitiveParameterValue), 'db_a9a6b3_hsk')
+#1 {main}
+  thrown in D:\vs code\hanqiao\test_db.php on line 11

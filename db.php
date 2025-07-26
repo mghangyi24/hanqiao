@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost";
-$username = "appuser";  // your DB username
-$password = "hankot1550!@#"; // your DB password
-$dbname = "hsk_master";
+$servername = "MYSQL8010.site4now.net";
+$username = "a9a6b3_hsk";  
+$password = "SP5iro3UGqwYCQn"; 
+$dbname = "db_a9a6b3_hsk";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {

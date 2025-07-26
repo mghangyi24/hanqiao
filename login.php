@@ -1,6 +1,11 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 header('Content-Type: application/json');
 session_start();
+
 require 'db_connection.php';
 
 $username = $_POST['username'] ?? '';
@@ -12,6 +17,8 @@ if (!$username || !$password) {
 }
 
 try {
+    $pdo->query("SELECT 1"); // test connection
+
     $stmt = $pdo->prepare("SELECT id, username, password, is_admin FROM users WHERE username = ?");
     $stmt->execute([$username]);
     $user = $stmt->fetch();
@@ -20,30 +27,25 @@ try {
         $storedPass = $user['password'];
 
         if (strpos($storedPass, '$2y$') === 0) {
-            // bcrypt hash
             if (password_verify($password, $storedPass)) {
                 loginSuccess($user);
                 exit;
             }
         } elseif (preg_match('/^[a-f0-9]{32}$/i', $storedPass)) {
-            // MD5 hash - verify by hashing input password to md5
             if (md5($password) === $storedPass) {
-                // Upgrade to bcrypt
                 $newHash = password_hash($password, PASSWORD_DEFAULT);
                 $updateStmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
                 $updateStmt->execute([$newHash, $user['id']]);
-
+                $user['password'] = $newHash;
                 loginSuccess($user);
                 exit;
             }
         } else {
-            // Assume plain text password
             if ($password === $storedPass) {
-                // Upgrade to bcrypt
                 $newHash = password_hash($password, PASSWORD_DEFAULT);
                 $updateStmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
                 $updateStmt->execute([$newHash, $user['id']]);
-
+                $user['password'] = $newHash;
                 loginSuccess($user);
                 exit;
             }
@@ -51,8 +53,11 @@ try {
     }
 
     echo json_encode(['status' => 'fail', 'message' => 'Invalid username or password']);
+    exit;
 } catch (Exception $e) {
-    echo json_encode(['status' => 'fail', 'message' => 'Server error']);
+    http_response_code(500);
+    echo json_encode(['status' => 'fail', 'message' => 'Server error: ' . $e->getMessage()]);
+    exit;
 }
 
 function loginSuccess($user) {

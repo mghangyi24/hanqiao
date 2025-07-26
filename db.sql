@@ -2,7 +2,7 @@ CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    hsk_level VARCHAR(20) NOT NULL,  -- to store '1,3,5'
+    hsk_level VARCHAR(20) NOT NULL,  
     is_admin TINYINT(1) DEFAULT 0,
     joined_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

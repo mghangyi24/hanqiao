@@ -13,6 +13,19 @@
             "username": "root",
             "database": "hsk_master",
             "askForPassword": true
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "MYSQL8010.site4now.net",
+            "port": 3306,
+            "driver": "MySQL",
+            "database": "db_a9a6b3_hsk",
+            "name": "MYSQL8010.site4now.net",
+            "username": "a9a6b3_hsk"
         }
     ]
 }
