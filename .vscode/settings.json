@@ -1,31 +1,65 @@
 {
-    "sqltools.connections": [
-        {
-            "mysqlOptions": {
-                "authProtocol": "default",
-                "enableSsl": "Disabled"
-            },
-            "previewLimit": 50,
-            "server": "localhost",
-            "port": 3306,
-            "driver": "MySQL",
-            "name": "hsk_master",
-            "username": "root",
-            "database": "hsk_master",
-            "askForPassword": true
-        },
-        {
-            "mysqlOptions": {
-                "authProtocol": "default",
-                "enableSsl": "Disabled"
-            },
-            "previewLimit": 50,
-            "server": "MYSQL8010.site4now.net",
-            "port": 3306,
-            "driver": "MySQL",
-            "database": "db_a9a6b3_hsk",
-            "name": "MYSQL8010.site4now.net",
-            "username": "a9a6b3_hsk"
-        }
-    ]
+  "sqltools.connections": [
+    {
+      "mysqlOptions": {
+        "authProtocol": "default",
+        "enableSsl": "Disabled"
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 3306,
+      "driver": "MySQL",
+      "name": "hsk_master",
+      "username": "root",
+      "database": "hsk_master",
+      "askForPassword": true
+    },
+    {
+      "mysqlOptions": {
+        "authProtocol": "default",
+        "enableSsl": "Disabled"
+      },
+      "previewLimit": 50,
+      "server": "MYSQL8010.site4now.net",
+      "port": 3306,
+      "driver": "MySQL",
+      "database": "db_a9a6b3_hsk",
+      "name": "MYSQL8010.site4now.net",
+      "username": "a9a6b3_hsk"
+    }
+  ],
+
+
+  "deploy.reloaded": {
+    "packages": [
+      {
+        "name": "Upload to Production Server",
+        "description": "Deploy all project files to the remote FTP server.",
+        "files": [
+          "**/*",
+          "!.git/**",
+          "!node_modules/**",
+          "!.vscode/**"
+        ],
+        "targets": ["Production Server"]
+      }
+    ],
+    "targets": [
+      {
+        "type": "ftp",
+        "name": "Production Server",
+        "description": "Deploy to site4now.net using FTP",
+        "host": "win8135.site4now.net",
+        "port": 21,
+        "user": "nksoftware-001",
+        "password": "iLIH3gwt3Ysw3Yi",
+        "remotePath": "/hanthuhtet",
+        "protocol": "ftp",
+        "passive": true
+      }
+    ],
+    "onSave": {
+      "auto": false
+    }
+  }
 }
