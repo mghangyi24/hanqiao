@@ -8,23 +8,20 @@ $charset = 'utf8mb4';
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
 $options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, // Throw exceptions on errors
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,       // Fetch assoc arrays by default
-    PDO::ATTR_EMULATE_PREPARES   => false,                  // Use native prepares
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
 ];
 
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
-
-    // Test connection and show tables for debugging
-    $stmt = $pdo->query("SHOW TABLES");
-    $tables = $stmt->fetchAll(PDO::FETCH_COLUMN);
-
-    echo "Connected to database '$db'. Tables found:\n";
-    foreach ($tables as $table) {
-        echo "- $table\n";
-    }
-
 } catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+    // Only return JSON on error if this script is accessed directly
+    if (basename($_SERVER['PHP_SELF']) === basename(__FILE__)) {
+        header('Content-Type: application/json');
+        echo json_encode(['status' => 'fail', 'message' => 'Database error: ' . $e->getMessage()]);
+        exit;
+    } else {
+        throw $e; // Let the parent script (like login.php) handle the error
+    }
 }

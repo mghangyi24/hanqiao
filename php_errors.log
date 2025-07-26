@@ -12,3 +12,19 @@ Stack trace:
 #0 D:\vs code\hanqiao\test_db.php(11): mysqli->__construct('MYSQL8010.site4...', 'a9a6b3', Object(SensitiveParameterValue), 'db_a9a6b3_hsk')
 #1 {main}
   thrown in D:\vs code\hanqiao\test_db.php on line 11
+[26-Jul-2025 01:21:32 America/New_York] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [1226] User 'a9a6b3_hsk' has exceeded the 'max_user_connections' resource (current value: 10) in D:\vs code\hanqiao\db_connection.php:17
+Stack trace:
+#0 D:\vs code\hanqiao\db_connection.php(17): PDO->__construct('mysql:host=MYSQ...', 'a9a6b3_hsk', Object(SensitiveParameterValue), Array)
+#1 D:\vs code\hanqiao\login.php(9): require('D:\\vs code\\hanq...')
+#2 {main}
+  thrown in D:\vs code\hanqiao\db_connection.php on line 17
+[26-Jul-2025 03:55:28 America/New_York] PHP Fatal error:  Uncaught PDOException: SQLSTATE[01000]: Warning: 1265 Data truncated for column 'hsk_level' at row 1 in D:\vs code\hanqiao\add_user.php:34
+Stack trace:
+#0 D:\vs code\hanqiao\add_user.php(34): PDOStatement->execute(Array)
+#1 {main}
+  thrown in D:\vs code\hanqiao\add_user.php on line 34
+[26-Jul-2025 03:55:39 America/New_York] PHP Fatal error:  Uncaught PDOException: SQLSTATE[01000]: Warning: 1265 Data truncated for column 'hsk_level' at row 1 in D:\vs code\hanqiao\add_user.php:34
+Stack trace:
+#0 D:\vs code\hanqiao\add_user.php(34): PDOStatement->execute(Array)
+#1 {main}
+  thrown in D:\vs code\hanqiao\add_user.php on line 34
